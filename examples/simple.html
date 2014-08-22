@@ -35,10 +35,10 @@
   function drawWordCloud() {
     d3.layout.cloud().size([800, 600])
         .words(answerArray.map(function(d) {
-          return {text: d.text, size: 10 + d.count * 40};
+          return {text: d.text, size: 10 + d.count * 40, count: d.count};
         }))
         .padding(5)
-        .rotate(function() { return ~~(Math.random() * 3) * 45; })
+        .rotate(function() { return ~~(Math.random() * 2) * 90; })
         .font("Impact")
         .fontSize(function(d) { return d.size; })
         .on("end", draw)
@@ -48,7 +48,10 @@
   drawWordCloud();
 
   function draw(words) {
-    d3.select("svg")
+    console.log(words[0].count)
+    if(words[0] && words[0].count === 1){
+      
+      d3.select("svg")
       .append("g")
         .attr("transform", "translate(300,200)")
       .selectAll("text")
@@ -61,6 +64,16 @@
         .attr("transform", function(d) {
           return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
         })
-        .text(function(d) { return d.text; });
+        .attr("id", function(d) { return d.text; })
+        .text(function(d) { return d.text; });  
+    } else {
+      console.log(words[0].text)
+      d3.select("#" + words[0].text)
+      .style("font-size", function(d) { return 10 + words[0].count * 40 + "px"; })
+      .style("font-family", "Impact")
+      .style("fill", function(d, i) { return fill(i); })
+
+    }
+    
   }
 </script>
