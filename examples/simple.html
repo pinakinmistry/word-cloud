@@ -41,9 +41,9 @@
 
 
   function drawWordCloud() {
-    d3.layout.cloud().size([800, 600])
+    d3.layout.cloud().size([1024, 600])
         .words(answerArray.map(function(d) {
-          return {text: d.text, size: 10 + d.count * 40, count: d.count, color: d.color};
+          return {text: d.text, size: 10 + d.count * 20, count: d.count, color: d.color};
         }))
         .padding(5)
         .rotate(function() { return ~~(Math.random() * 2) * 90; })
@@ -77,8 +77,15 @@
     } else {
       console.log(words[0].text)
       d3.select("#" + words[0].text)
+<<<<<<< HEAD
       .style("font-size", function(d) { return 10 + words[0].count * 40 + "px"; })
       .style("font-family", "Impact")
+=======
+      .style("font-size", function(d) { return 10 + words[0].count * 20 + "px"; })
+      .style("font-family", "Impact");
+      //.style("fill", function(d, i) { return fill(i); })
+
+>>>>>>> 4698bb746f6c5ef75c9e214cbbec249f135dc7aa
     }
     
   }
