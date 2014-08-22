@@ -3,13 +3,13 @@
 <body>
 <input id="answer" type="text">
 <button onclick="submit()">Submit</button>
+<span id="answerCount" style="font-size: 70px">0</div>
 <script src="../lib/d3/d3.js"></script>
 <script src="../d3.layout.cloud.js"></script>
 <script>
   
-  var answer = {}, answersString = "", answerArray = [], colorIndex = 0;
-  var colors = ['#8A9B0F', '#490A3D', '#C02942', '#E84A5F', '#53777A', '#D95B43', '#BD1550',
-      '#E97F02', '#ECD078', '#99B898', '#FECEA8', '#542437'];
+  var answer = {}, answersString = "", answerArray = [], colorIndex = 0, answerCount = 0;
+  var colors = ['#D01417', '#0d0d0d', '#954f37', '#D92332', '#1a7e0e', '#D92332', '#31401A', '#F29F05', '#400101', '#A62121',  '#8A9B0F', '#490A3D', '#C02942', '#E84A5F', '#53777A', '#D95B43', '#BD1550', '#E97F02', '#ECD078', '#99B898', '#FECEA8', '#542437'];
   var submit = function() {
     answer.text = document.getElementById('answer').value;
     answersString = answersString ? answersString + ' ' + answer.text : answer.text;
@@ -19,6 +19,7 @@
     drawWordCloud();
     answerArray = [];
     document.getElementById('answer').value = '';
+    document.getElementById('answerCount').innerHTML = ++answerCount;
   }
 
   function colorCode(answer) {
@@ -35,12 +36,12 @@
   var fill = d3.scale.category20();
 
   d3.select("body").append("svg")
-        .attr("width", 1024)
+        .attr("width", 1200)
         .attr("height", 600);
 
 
   function drawWordCloud() {
-    d3.layout.cloud().size([1024, 600])
+    d3.layout.cloud().size([1200, 600])
         .words(answerArray.map(function(d) {
           return {text: d.text, size: 10 + d.count * 20, count: d.count, color: d.color};
         }))
@@ -67,6 +68,7 @@
         .style("font-size", function(d) { return d.size + "px"; })
         .style("font-family", "Impact")
         .style("fill", function(d) { return d.color; })
+        .style("opacity", .8)
         .attr("text-anchor", "middle")
         .attr("transform", function(d) {
           return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
