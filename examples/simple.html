@@ -5,19 +5,27 @@
 <button onclick="submit()">Submit</button>
 <script src="../lib/d3/d3.js"></script>
 <script src="../d3.layout.cloud.js"></script>
+<script src="../lib/underscore.min.js"></script>
 <script>
   
-  var answer = {}, answersString = "", answerArray = [];
+  var answer = {}, answersString = "", answerArray = [], answersArray = [], colorIndex = 0,
+    colors = ['red', 'blue', 'green', 'black'];
   var submit = function() {
     answer.text = document.getElementById('answer').value;
     answersString = answersString ? answersString + ' ' + answer.text : answer.text;
     answer.count = answersString.count(answer.text);
-    console.log(answersString, answer.count);
+    answersArray.push(answer);
+    colorCode(answer);
     answerArray.push(answer);
     drawWordCloud();
     answerArray = [];
     document.getElementById('answer').value = '';
+  }
 
+  function colorCode(answer) {
+    if(answer.count === 1) {
+      answer.color = colors[colorIndex++];
+    }
   }
 
   String.prototype.count = function(search) {
@@ -35,7 +43,7 @@
   function drawWordCloud() {
     d3.layout.cloud().size([800, 600])
         .words(answerArray.map(function(d) {
-          return {text: d.text, size: 10 + d.count * 40};
+          return {text: d.text, size: 10 + d.count * 40, color: d.color};
         }))
         .padding(5)
         .rotate(function() { return ~~(Math.random() * 3) * 45; })
@@ -56,7 +64,7 @@
       .enter().append("text")
         .style("font-size", function(d) { return d.size + "px"; })
         .style("font-family", "Impact")
-        .style("fill", function(d, i) { return fill(i); })
+        .style("fill", function(d) { return d.color; })
         .attr("text-anchor", "middle")
         .attr("transform", function(d) {
           return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
