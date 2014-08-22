@@ -7,10 +7,12 @@
 <script src="../d3.layout.cloud.js"></script>
 <script>
   
-  var answer, answerArray = [];
+  var answer = {}, answersString = "", answerArray = [];
   var submit = function() {
-    answer = document.getElementById('answer').value;
-    answers.push(answer);
+    answer.text = document.getElementById('answer').value;
+    answersString = answersString ? answersString + ' ' + answer.text : answer.text;
+    answer.count = answersString.count(answer.text);
+    console.log(answersString, answer.count);
     answerArray.push(answer);
     drawWordCloud();
     answerArray = [];
@@ -18,7 +20,10 @@
 
   }
 
-  var answers = [];
+  String.prototype.count = function(search) {
+      var m = this.match(new RegExp(search.toString().replace(/(?=[.\\+*?[^\]$(){}\|])/g, "\\"), "g"));
+      return m ? m.length:0;
+  }
 
   var fill = d3.scale.category20();
 
@@ -30,10 +35,10 @@
   function drawWordCloud() {
     d3.layout.cloud().size([800, 600])
         .words(answerArray.map(function(d) {
-          return {text: d, size: 10 + Math.random() * 90};
+          return {text: d.text, size: 10 + d.count * 40};
         }))
         .padding(5)
-        .rotate(function() { return ~~(Math.random() * 4) * 90; })
+        .rotate(function() { return ~~(Math.random() * 3) * 45; })
         .font("Impact")
         .fontSize(function(d) { return d.size; })
         .on("end", draw)
