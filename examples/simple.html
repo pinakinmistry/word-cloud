@@ -1,30 +1,51 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 <body>
+<input id="answer" type="text">
+<button onclick="submit()">Submit</button>
 <script src="../lib/d3/d3.js"></script>
 <script src="../d3.layout.cloud.js"></script>
 <script>
+  
+  var answer, answerArray = [];
+  var submit = function() {
+    answer = document.getElementById('answer').value;
+    answers.push(answer);
+    answerArray.push(answer);
+    drawWordCloud();
+    answerArray = [];
+    document.getElementById('answer').value = '';
+
+  }
+
+  var answers = [];
+
   var fill = d3.scale.category20();
 
-  d3.layout.cloud().size([300, 300])
-      .words([
-        "Hello", "world", "normally", "you", "want", "more", "words",
-        "than", "this"].map(function(d) {
-        return {text: d, size: 10 + Math.random() * 90};
-      }))
-      .padding(5)
-      .rotate(function() { return ~~(Math.random() * 2) * 90; })
-      .font("Impact")
-      .fontSize(function(d) { return d.size; })
-      .on("end", draw)
-      .start();
+  d3.select("body").append("svg")
+        .attr("width", 1024)
+        .attr("height", 600);
+
+
+  function drawWordCloud() {
+    d3.layout.cloud().size([800, 600])
+        .words(answerArray.map(function(d) {
+          return {text: d, size: 10 + Math.random() * 90};
+        }))
+        .padding(5)
+        .rotate(function() { return ~~(Math.random() * 4) * 45; })
+        .font("Impact")
+        .fontSize(function(d) { return d.size; })
+        .on("end", draw)
+        .start();
+  }
+
+  drawWordCloud();
 
   function draw(words) {
-    d3.select("body").append("svg")
-        .attr("width", 300)
-        .attr("height", 300)
+    d3.select("svg")
       .append("g")
-        .attr("transform", "translate(150,150)")
+        .attr("transform", "translate(300,200)")
       .selectAll("text")
         .data(words)
       .enter().append("text")
